@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "86536711970",
+    "firebase_url": "https://wklny-1ee34.firebaseio.com",
+    "project_id": "wklny-1ee34",
+    "storage_bucket": "wklny-1ee34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86536711970:android:eae5bf6dc67f599e",
+        "android_client_info": {
+          "package_name": "com.wklny"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86536711970-3s7gjmjegpsh5bi7r37kb7affd7avhg0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe77KAP7euHYzi7uXllISxdaB9DUxU-b0"
+        },
+        {
+          "current_key": "AIzaSyA2V39xbbJ2x2nG6_QKG05pTyMy7FQcnrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86536711970-3s7gjmjegpsh5bi7r37kb7affd7avhg0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "86536711970-b1eb6vtvs3sel6or58r2akn4gljogqo2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "mits.wklny"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

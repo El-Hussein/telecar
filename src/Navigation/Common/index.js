@@ -1,0 +1,21 @@
+import _Login from "./Login";
+import _PhoneVerfiy from "./PhoneVerfiy";
+import _Rigster from "./Register";
+import _About from "./About";
+import _CallUs from "./CallUs";
+import _Policy from "./Policy";
+import _ForgetPasswordCode from "./ForgetPasswordCode";
+import _Product from "./Product";
+
+import _ProfileSetting from "./ProfileSetting";
+import _ForgetPassword from "./ForgetPassword";
+export const Login = _Login;
+export const Product = _Product;
+export const PhoneVerfiy = _PhoneVerfiy;
+export const Register = _Rigster;
+export const About = _About;
+export const Policy = _Policy;
+export const CallUs = _CallUs;
+export const ForgetPassword = _ForgetPassword;
+export const ProfileSetting = _ProfileSetting;
+export const ForgetPasswordCode = _ForgetPasswordCode;

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "876175163051",
+    "firebase_url": "https://telecar-3c801.firebaseio.com",
+    "project_id": "telecar-3c801",
+    "storage_bucket": "telecar-3c801.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876175163051:android:23cac77ba22af2a82cc1ee",
+        "android_client_info": {
+          "package_name": "com.telecar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876175163051-mj1iqnh23t8g4p2d9vm0r213bk4agaal.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA65KoCJtofC7V9csiMg1jtsMUCupeG8Ls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876175163051-mj1iqnh23t8g4p2d9vm0r213bk4agaal.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

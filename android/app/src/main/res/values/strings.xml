@@ -1,0 +1,7 @@
+<resources>
+	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">x0g8QTqfaXeVs9XRaTPUVzPrKZhEUbA1wJwVj</string>
+    <string name="app_name">TELECAR</string>
+    <string name="facebook_app_id">489448128319006</string>
+    <string name="fb_login_protocol_scheme">fb489448128319006</string>
+
+</resources>

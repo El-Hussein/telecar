@@ -1,0 +1,79 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+target 'TELECAR' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for TELECAR
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'RCTImage' # <- Add this line
+  ]
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+  pod 'Firebase/Core', '~> 5.20.1'
+  pod 'Firebase/Messaging', '~> 5.20.1'
+   
+
+  pod 'react-native-spinkit', :path => '../node_modules/react-native-spinkit'
+
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  
+  pod 'react-native-pdf', :path => '../node_modules/react-native-pdf'
+
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+
+  pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
+
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', path: '../node_modules/react-native-maps'
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+  pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
+
+
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
+  target 'TELECARTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'TELECAR-tvOS' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for TELECAR-tvOS
+
+  target 'TELECAR-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "react-native-google-maps"
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
+      end
+    end
+
+    if target.name == "React"
+      target.remove_from_project
+    end
+        if target.name == "yoga"
+      target.remove_from_project
+    end
+  end
+end
+
+
