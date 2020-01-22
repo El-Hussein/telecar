@@ -11,10 +11,11 @@ import {
     TextInput
 } from 'react-native';
 import localization from '../localization/localization';
-import { width, height, COLORS, IMAGES } from '../config';
+import { width, height, COLORS, IMAGES, baseUrl } from '../config';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { withNavigation } from 'react-navigation';
-
+import axios from "axios";
+import Store from "../Redux/index";
 
 const MyText = (text, style)=>{
     return(
@@ -28,7 +29,27 @@ class Header extends React.Component{
         this.state={
             text:props.navigation.getParam('searchText')?props.navigation.getParam('searchText'):'',
             rtl:I18nManager.isRTL != (localization.getLanguage()=='ar'),
+            notificationsCount:0,
         }
+    }
+
+    async getNotificationsCount(){
+        return await axios
+        .get(baseUrl + "api/merchants/notifications/counts/get", {
+          headers: { Authorization: 'Bearer ' + Store.getState().auth.user.token }
+        })
+        .then(res => {  
+            console.log("**************Notifications COUNT**************")
+            console.log(res.data.data.count)
+            console.log("**************Notifications COUNT**************")
+            return res.data.data.count;
+        })
+        .catch(err => {
+            console.log("**************Notifications COUNT ERROR**************")
+            console.log(err)
+            console.log("**************Notifications COUNT ERROR**************")
+          return 0;
+        });
     }
 
     componentWillReceiveProps(){
@@ -36,16 +57,31 @@ class Header extends React.Component{
             text:this.props.navigation.getParam('searchText')?this.props.navigation.getParam('searchText'):this.state.text,
         })
     }
+    
+    async componentDidMount(){
+        this.setState({
+            notificationsCount: await this.getNotificationsCount(),
+        })
+    }
 
     render(){
-        let notificationCount = 4;
+        let notificationCount = Store.getState().auth.user?this.state.notificationsCount:0;
         return(
             <View style={styles.header}>
                 <StatusBar backgroundColor={COLORS.main}/>   
                 <View style={[styles.headerTop, {flexDirection:this.state.rtl?'row-reverse':'row'}]}>
                     <Icon name="bars" onPress={()=>this.props.navigation.toggleDrawer()} size={width*0.05} color={COLORS.white}/>
                     <View>
-                        <Icon name="bell" onPress={()=>this.props.navigation.navigate('Notifications')} size={width*0.05} color={COLORS.white}/>
+                        <Icon name="bell" onPress={()=>{
+                            if(Store.getState().auth.user)
+                                this.props.navigation.navigate('Notifications')
+                            else{
+                                this.props.navigation.navigate('Auth')
+                                const AlertMessage = Store.getState().Config.alert;
+                                AlertMessage("error", localization.shouldLoginFirst);
+                            }
+                        }} size={width*0.05} color={COLORS.white}/>
+                            
                         {notificationCount?<Text style={[styles.notificationCount, this.state.rtl==true?{left:width*0.04}:null]}>{notificationCount}</Text>:null}
                     </View> 
                 </View>

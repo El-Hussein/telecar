@@ -148,7 +148,7 @@ class Home extends React.Component{
                     <Text style={{color:COLORS.gray, paddingHorizontal:width*0.02, width:width*0.96, textAlign:'left', minHeight:height*0.1, paddingVertical:width*0.02, fontSize:width*0.035, fontWeight:'bold'}}> {this.state.product.details} </Text>
                 </View>
 
-                <View style={{borderWidth:width*0.001, flexDirection:I18nManager.isRTL&&this.state.rtl?'row':'row-reverse', height:height*0.06, marginHorizontal:width*0.02, marginVertical:width*0.05, borderColor:COLORS.gray}}>
+                <View style={{borderWidth:width*0.001, flexDirection:!this.state.rtl?'row':'row-reverse', height:height*0.06, marginHorizontal:width*0.02, marginVertical:width*0.05, borderColor:COLORS.gray}}>
                     <TouchableOpacity onPress={()=>openWhatsApp(`whatsapp://send?phone=${this.state.product.whats_number}&text=${this.state.product.name}`)} style={{width:width*0.245, justifyContent:'center', alignItems:'center', borderLeftWidth:width*0.001, borderLeftColor:COLORS.gray}}>
                         <Image source={IMAGES.whatsup} style={{width:width*0.1, height:width*0.1, resizeMode:'contain'}}/>
                     </TouchableOpacity>

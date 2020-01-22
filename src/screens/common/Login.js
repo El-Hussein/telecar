@@ -176,7 +176,7 @@ class Login extends React.Component{
                         </TouchableOpacity>
                     )}
 
-                    <View style={{flexDirection:I18nManager.isRTL&&this.state.rtl?'row-reverse':'row', justifyContent:'center', marginTop:width*0.05}}>
+                    <View style={{flexDirection:this.state.rtl?'row-reverse':'row', justifyContent:'center', marginTop:width*0.05}}>
                         <Text style={styles.text}> {localization.createNewAccount} </Text>
                         <Text onPress={()=>this.props.navigation.navigate('Register')} style={styles.text}>{localization.createOne}</Text>
                     </View>
@@ -285,10 +285,10 @@ const styles = StyleSheet.create({
         height:width*0.08,
         resizeMode:'contain',
         // backgroundColor:'red',
-        transform:[{ rotate:!I18nManager.isRTL&&rtl?'180deg':'0deg'}],
+        transform:[{ rotate:I18nManager.isRTL&&rtl?'180deg':'0deg'}],
     },
     loginButton:{
-        flexDirection:rtl?'row':'row-reverse',
+        flexDirection:!I18nManager.isRTL&&rtl?'row':'row-reverse',
         width:width*0.8,
         justifyContent:'center',
         alignItems:'center',

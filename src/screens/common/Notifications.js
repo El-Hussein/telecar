@@ -81,7 +81,7 @@ class Chats extends React.Component{
                 <View style={styles.texts}>
                     <Text style={styles.name}> {item.message} </Text> 
                     <Text style={styles.time}> {Moment(Number(item.timestamp)).format('YYYY-MM-DD HH:mm A')} </Text>
-                    <Text style={styles.lastMessage} numberOfLines={3}> {item.subtitle} </Text> 
+                    <Text style={styles.lastMessage} numberOfLines={3}> {item.message=="NewOffer"&&item.product[0]?item.product[0].name + ' ' + item.product[0].discount + '%':item.subtitle}  </Text> 
                 </View>
                 <TouchableOpacity onPress={()=>this._read(item.id)} style={{backgroundColor:COLORS.main, width:width*0.04, justifyContent:'center', alignItems:'center', height:width*0.04, borderRadius:width*0.02, margin:width*0.02}}>
                     <Text style={{color:COLORS.white, fontSize:width*0.03}}>X</Text>
@@ -119,7 +119,7 @@ class Chats extends React.Component{
                 ) :<FlatList
                     data={this.state.Notifications}
                     renderItem={this._renderChat} 
-                    keyExtractor={(index, item)=>item.id + index.toString()}
+                    keyExtractor={(item)=>item.id+''}
                     ItemSeparatorComponent={()=><View style={{width:width, height:height*0.001, backgroundColor:COLORS.gray,}}/>}
                     ListEmptyComponent={()=><Text style={{fontSize:width*0.05, color:COLORS.gray, margin:width*0.02}}> {localization.noAvailableData} </Text>}
                 /> }             
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         fontSize:width*0.045,
         color:COLORS.main,
         // textAlign:'center',
-        // textAlign:'right',
+        textAlign:'left',
         textAlignVertical:'center',
         height:height*0.03
     },
@@ -191,9 +191,9 @@ const styles = StyleSheet.create({
     lastMessage:{
         fontSize:width*0.035,
         color:COLORS.gray,
-        // textAlign:'center',
-        textAlignVertical:'center',
+        textAlign:'left',
+        textAlignVertical:'top',
         height:height*0.085,
-        lineHeight:height*0.024
+        // lineHeight:height*0.024
     },
 })
