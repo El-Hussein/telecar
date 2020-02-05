@@ -79,7 +79,7 @@ class Category extends React.Component{
     }
 
     componentDidMount() {
-        this.props.GetCategoryProducts(this.state.Category.id, this.props.categoryProducts.page);
+        this.props.GetCategoryProducts(this.state.Category.id, 0);
         // .then(res => {
         //   this.setState({ Products: { loading: false, data: res } });
         // });
@@ -131,6 +131,7 @@ class Category extends React.Component{
     }
 
     render(){
+        console.log(this.props.categoryProducts)
         return(
             <View style={styles.container}>
                 {/* <Image style={{width:width, height:height*2, resizeMode:'stretch', position:'absolute', zIndex:-5}} source={IMAGES.bg}/>  */}

@@ -60,7 +60,7 @@ class Header extends React.Component{
     
     async componentDidMount(){
         this.setState({
-            notificationsCount: await this.getNotificationsCount(),
+            notificationsCount: Store.getState().auth.user?this.state.notificationsCount:0,
         })
     }
 
