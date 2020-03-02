@@ -143,7 +143,7 @@ class Home extends React.Component{
                         <Menu onSelect={(data)=>{
                             this.setState({
                                 department:data.name,
-                                filterData: this.props.bestOffers.data.filter((product)=>product.category_id == data.id),
+                                filterData:data.id==0?this.props.bestOffers.data:this.props.bestOffers.data.filter((product)=>product.category_id == data.id),
                             })
                             console.log('selected department is : ' + data);
                         }} style={{width:width*0.94, borderWidth:width*0.002, height:width*0.07, marginBottom:width*0.02, justifyContent:'center', borderColor:COLORS.main}}>
@@ -152,7 +152,7 @@ class Home extends React.Component{
                                 {categories.map((item)=>{
                                     // console.log("data from menu : " + JSON.stringify(item));
                                     return (
-                                        <MenuOption value={item} customStyles={{width:width*0.94}} text={item.name} />
+                                        <MenuOption key={item.id} value={item} customStyles={{width:width*0.94}} text={item.name} />
                                 )})}
                             </MenuOptions>
                         </Menu>
@@ -164,6 +164,7 @@ class Home extends React.Component{
                     renderItem={this._renderItem}
                     numColumns={2}
                     onEndReached={()=>this.onLoadMore()}
+                    keyExtractor={(item, index) => `item--${item.id}`}
                     onEndReachedThreshold={1.0}
                     onRefresh={()=>{
                         this.props.GetBestOffers(1);

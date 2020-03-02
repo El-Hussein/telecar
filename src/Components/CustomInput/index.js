@@ -60,7 +60,7 @@ export default class CustomInput extends React.Component {
                                 {this.props.data.map((item)=>{
                                 // console.log("data from menu : " + JSON.stringify(item));
                                 return (
-                                    <MenuOption value={item} customStyles={{optionText:{width:width*0.46, borderBottomColor:COLORS.gray, borderBottomWidth:width*0.002, textAlign:I18nManager.isRTL?'left':'right', paddingHorizontal:width*0.05, color:COLORS.main}}} text={item.name} />
+                                    <MenuOption key={item.id} value={item} customStyles={{optionText:{width:width*0.46, borderBottomColor:COLORS.gray, borderBottomWidth:width*0.002, textAlign:I18nManager.isRTL?'left':'right', paddingHorizontal:width*0.05, color:COLORS.main}}} text={item.name} />
                                 )})}
                                 {/* <MenuOption customStyles={{optionText:{width:width*0.46, borderBottomColor:COLORS.gray, borderBottomWidth:width*0.002, textAlign:I18nManager.isRTL?'left':'right', paddingHorizontal:width*0.05, color:COLORS.main}}} text='delete'/>
                                 <MenuOption customStyles={{optionText:{width:width*0.46, textAlign:I18nManager.isRTL?'left':'right', paddingHorizontal:width*0.05, color:COLORS.main}}} text='Disabled' /> */}

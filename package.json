@@ -1,6 +1,6 @@
 {
   "name": "TELECAR",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "apk": "cd android && ./gradlew assembleRelease && cd .. && react-native run-android --variant=release",

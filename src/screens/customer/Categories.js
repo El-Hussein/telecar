@@ -100,6 +100,7 @@ class Home extends React.Component{
                         renderItem={this._renderItemCat.bind(this)}
                         numColumns={3}
                         // data={this.state.itemsCat}
+                        keyExtractor={(item, index) => `item--${item.id}`}
                         data={[...this.props.cats]}
                         showsHorizontalScrollIndicator={false}
                         showsVerticalScrollIndicator={false}

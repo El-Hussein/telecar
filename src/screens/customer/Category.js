@@ -168,6 +168,7 @@ class Category extends React.Component{
                         onRefresh={()=>{
                             this.props.GetCategoryProducts(this.state.Category.id, 1)
                         }}
+                        keyExtractor={(item, index) => `item--${item.id}`}
                         refreshing={this.props.categoryProducts.loading}
                         ListHeaderComponent={
                             <View>

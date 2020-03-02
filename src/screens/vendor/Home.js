@@ -113,7 +113,7 @@ class Home extends React.Component{
                     numColumns={2}
                     data={this.state.items}
                     // extraData={this.state.items}
-                    keyExtractor={(index)=>index.toString()}
+                    keyExtractor={(item, index) => `item--${index}`}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     style={{marginTop:height*0.15}}

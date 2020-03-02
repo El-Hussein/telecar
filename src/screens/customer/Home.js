@@ -169,6 +169,7 @@ class Home extends React.Component{
                         </TouchableOpacity>
                     </View>
                     <FlatList
+                        keyExtractor={(item, index) => `item--${item.id}`}
                         renderItem={this._renderItemCat.bind(this)}
                         numColumns={3}
                         // data={this.state.itemsCat}
@@ -201,6 +202,7 @@ class Home extends React.Component{
                         renderItem={this._renderItem}
                         numColumns={2}
                         // data={this.state.items}
+                        keyExtractor={(item, index) => `item--${item.id}`}
                         onEndReached={()=>this.onLoadMore}
                         data={ this.props.bestOffers.data }
                         showsHorizontalScrollIndicator={false}

@@ -138,6 +138,7 @@ class Home extends React.Component{
                     <FlatList
                         renderItem={this._renderItem}
                         // extraData={this.props.favs}
+                        keyExtractor={(item, index) => `item--${item.id}`}
                         numColumns={2}
                         data={this.props.favs}
                         showsHorizontalScrollIndicator={false}

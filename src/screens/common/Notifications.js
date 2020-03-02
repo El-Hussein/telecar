@@ -119,7 +119,7 @@ class Chats extends React.Component{
                 ) :<FlatList
                     data={this.state.Notifications}
                     renderItem={this._renderChat} 
-                    keyExtractor={(item)=>item.id+''}
+                    keyExtractor={(item, index) => `item--${item.id}`}
                     ItemSeparatorComponent={()=><View style={{width:width, height:height*0.001, backgroundColor:COLORS.gray,}}/>}
                     ListEmptyComponent={()=><Text style={{fontSize:width*0.05, color:COLORS.gray, margin:width*0.02}}> {localization.noAvailableData} </Text>}
                 /> }             

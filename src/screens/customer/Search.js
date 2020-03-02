@@ -135,7 +135,7 @@ class Category extends React.Component{
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={()=><Text style={{fontSize:width*0.05, color:COLORS.gray, margin:width*0.02}}> {localization.noAvailableData} </Text>}
-
+                keyExtractor={(item, index) => `item--${item.id}`}
                 onEndReached={()=>this.onLoadMore()}
                 onEndReachedThreshold={1.0}
                 onRefresh={()=>{

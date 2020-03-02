@@ -145,6 +145,7 @@ class Category extends React.Component{
                         renderItem={this._renderItem}
                         numColumns={2}
                         // data={this.state.items}
+                        keyExtractor={(item, index) => `item--${item.id}`}
                         data={this.state.data}
                         showsHorizontalScrollIndicator={false}
                         showsVerticalScrollIndicator={false}

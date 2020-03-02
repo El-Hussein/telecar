@@ -85,6 +85,7 @@ export const fetchFav = async (dispatch)=>{
 
 // done
 export const AddOrder = async (payload, navigationaction) => {
+  console.log(payload)
   const AlertMessage = Store.getState().Config.alert;
   const token = Store.getState().auth.user.token;
   return await axios

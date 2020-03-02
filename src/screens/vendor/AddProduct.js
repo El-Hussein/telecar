@@ -150,7 +150,6 @@ class AddProduct extends React.Component{
         formData.append("product_image", this.state.pic);
         formData.append("price", this.state.ProductPrice);
         formData.append("discount", this.state.descount);
-        formData.append("facebook", this.state.facebookAccount);
         formData.append("call_phone", this.state.phoneNumber);
         formData.append("whats_number", this.state.whatsApp);
         formData.append("lat", this.props.user.lat);
@@ -178,14 +177,13 @@ class AddProduct extends React.Component{
             ProductDetsilsError:this.state.ProductDetsils?'':localization.thisFieldIsRequired,
             ProductPriceError:this.state.ProductPrice?'':localization.thisFieldIsRequired,
             descountError:this.state.descount?'':localization.thisFieldIsRequired,
-            facebookAccountError:this.state.facebookAccount?'':localization.thisFieldIsRequired,
             phoneNumberError:this.state.phoneNumber?'':localization.thisFieldIsRequired,
             whatsAppError:this.state.whatsApp?'':localization.thisFieldIsRequired,
             latitudeError:this.state.latitude?'':localization.thisFieldIsRequired,
             longitudeError:this.state.longitude?'':localization.thisFieldIsRequired,
             
         })
-        return this.state.pic && this.state.selectedDepartment && this.state.city && this.state.ProductTitle && this.state.ProductDetsils && this.state.ProductPrice && this.state.descount && this.state.facebookAccount && this.state.phoneNumber && this.state.whatsApp && this.state.latitude && this.state.longitude;
+        return this.state.pic && this.state.selectedDepartment && this.state.city && this.state.ProductTitle && this.state.ProductDetsils && this.state.ProductPrice && this.state.descount && this.state.phoneNumber && this.state.whatsApp && this.state.latitude && this.state.longitude;
     }
     
     render(){
@@ -281,23 +279,13 @@ class AddProduct extends React.Component{
                         error={this.state.descountError}
                         onChangeText={(descount)=>this.setState({descount})}
                         reference={ref => this.descountRef = ref}
-                        onSubmitEditing={()=>this.facebookAccountRef.focus()}
+                        onSubmitEditing={()=>this.phoneNumberRef.focus()}
                         returnKeyType="next"
                         value={this.state.descount}
                         iconName="user"
                         keyboardType="numeric"
                         />
 
-                    <CustomInput 
-                        placeholder={localization.facebookAccount}
-                        error={this.state.facebookAccountError}
-                        onChangeText={(facebookAccount)=>this.setState({facebookAccount})}
-                        reference={ref => this.facebookAccountRef = ref}
-                        onSubmitEditing={()=>this.phoneNumberRef.focus()}
-                        returnKeyType="next"
-                        value={this.state.facebookAccount}
-                        iconName="facebook"
-                        />
                     <CustomInput 
                         placeholder={localization.phoneNumber}
                         error={this.state.phoneNumberError}
@@ -315,7 +303,8 @@ class AddProduct extends React.Component{
                         onChangeText={(whatsApp)=>this.setState({whatsApp})}
                         reference={ref => this.whatsAppRef = ref}
                         // onSubmitEditing={()=>this.lastNameRef.focus()}
-                        returnKeyType="next"
+                        returnKeyType="go"
+                        keyboardType="numeric"
                         value={this.state.whatsApp}
                         iconName="whatsapp"
                         />

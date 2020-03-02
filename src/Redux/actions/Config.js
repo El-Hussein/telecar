@@ -47,9 +47,9 @@ export const GetAppInitials = async () => {
   AsyncStorage.getItem('favourite').then((favourites)=>{
     favourites = JSON.parse(favourites);
     console.log("------------FAVOURITES---------------")
-    console.log(favourites.fav);
+    console.log(favourites);
     console.log("------------FAVOURITES---------------")
-    store.dispatch({ type : FetchFAV, payload:favourites.fav?favourites.fav:[]});
+    store.dispatch({ type : FetchFAV, payload:favourites?favourites.fav:[]});
   })
 
 };
