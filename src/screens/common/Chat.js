@@ -34,6 +34,7 @@ import Axios from "axios";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { RFValue } from "react-native-responsive-fontsize";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { NavigationEvents } from 'react-navigation';
 
 const openMapsApp = (lat, lng, label) => {
     console.log("open map location!?!?")
@@ -167,6 +168,7 @@ class Chat extends React.Component{
     // };
     
     async componentDidMount() {
+        console.log('heeeeeeeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', this.props)
         this.database = firebaseJs.database().ref("chat");
         if(Platform.OS === 'android'){
             this.requestLocationPermission()
@@ -176,9 +178,9 @@ class Chat extends React.Component{
         // this.setState({
         //     LoginType: await AsyncStorage.getItem('userType'),
         // })
+        
         await this.get_messages_onload();
         await this.get_new_messages();
-
     }
 
     getUnique = (arr, comp) => {
@@ -197,22 +199,28 @@ class Chat extends React.Component{
 
     get_messages_onload = async () => {
         this.setState({ loading: true });
+        console.log('get_messages_onload')
         //let S = Date.now();
         let messages = [];
         let userType =
         this.props && this.props.type_user === "Customer" ? "userId" : "merchantId";
     
         await this.database.once("value", snapshot =>
-        snapshot.forEach(message => {
-            messages.push({ id: message.key, ...message.val() });
-        })
+        {
+            // console.log('snapshot', snapshot)
+            snapshot.forEach(message => {
+                // console.log('message', message)
+                messages.push({ id: message.key, ...message.val() });
+            })
+        }
         );
         let result = [];
         let temp = messages
         .filter(
             t =>
             t.productId &&
-            t.productId === this.props.navigation.state.params.productId
+            t.productId === this.props.navigation.state.params.productId &&
+            (t.from == this.props.name || t.to == this.props.name)
         )
         .sort(function(a, b) {
             // Turn your strings into dates, and then subtract them
@@ -236,7 +244,7 @@ class Chat extends React.Component{
             result.push(ob);
         });
         }
-    
+        // console.log(messages)
         await this.setState(
         {
             messages: result.reverse().splice(0, result.length-1),
@@ -269,23 +277,30 @@ class Chat extends React.Component{
     }
     
     get_new_messages = async () => {
-        this.database.limitToLast(1).on("child_added", snapshot =>
-        this.setState(prev => ({
-            messages: [
-            ...prev.messages,
-            {
-                id: snapshot.key,
-                ...{
-                avatar: "https://randomuser.me/api/portraits/men/75.jpg",
-                alt: snapshot.val().from,
-                title: snapshot.val().from,
-                subtitle: snapshot.val().message,
-                date: snapshot.val().timestamp,
-                unread: 0
-                }
-            },
-            ]
-        }))
+        console.log('get_new_messages')
+            this.database.limitToLast(1).on("child_added", snapshot =>{
+            console.log('new message related data', snapshot.key, this.state.messages)
+            console.log(this.state.messages.filter(m => m.id == snapshot.key))
+            console.log('message related data ends here')
+            if(snapshot.val().productId === this.props.navigation.state.params.productId && this.state.messages.filter(m => m.id == snapshot.key).length == 0)
+            this.setState(prev => ({
+                messages: [
+                ...prev.messages,
+                {
+                    id: snapshot.key,
+                    ...{
+                    avatar: "https://randomuser.me/api/portraits/men/75.jpg",
+                    alt: snapshot.val().from,
+                    title: snapshot.val().from,
+                    subtitle: snapshot.val().message,
+                    date: snapshot.val().timestamp,
+                    unread: 0
+                    }
+                },
+                ]
+            })
+            )
+        }
         );
         console.log("NEW ONE ADDED");
     };
@@ -294,7 +309,7 @@ class Chat extends React.Component{
         this.setState({ disabled: true });
         if(!this.state.message&&!location)
             return null;
-        console.log("LOOOOOOOOOOOOOOOOOOOOOOL")
+        // console.log("LOOOOOOOOOOOOOOOOOOOOOOL")
         let userType =
         this.props && this.props.type_user === "Customer" ? "userId" : "merchantId";
         let merchantId =
@@ -323,16 +338,16 @@ class Chat extends React.Component{
         productId: this.props.navigation.state.params.productId
         };
     
-        console.log("====================================");
-        console.log(data);
-        console.log("====================================");
+        // console.log("====================================");
+        // console.log(data);
+        // console.log("====================================");
         this.database.push(data);
         this.setState({ disabled: false });
         const token = this.props.token;
-        console.log(token, this.props.type_user)
+        // console.log(token, this.props.type_user)
         if (this.props && this.props.type_user === "Customer") {
         try{
-            console.log("CUSTOMER LOOL")
+            // console.log("CUSTOMER LOOL")
             await Axios.post(
                 baseUrl + "api/users/notifiy/merchant",
                 {
@@ -350,8 +365,8 @@ class Chat extends React.Component{
 
                 console.log("=======DONE SENT?=============================");
                 // console.log(product_id, merchant_id, user_id)
-                console.log(res);
-                console.log("====================================");
+                // console.log(res);
+                // console.log("====================================");
             }).catch((err)=>{
                 console.log("=======not SENT!!=============================");
                 console.log(err);
@@ -464,9 +479,9 @@ class Chat extends React.Component{
     }
 
     render(){
-        console.log("this.state.messages loooooooool")
+        // console.log("this.state.messages loooooooool")
         console.log(this.state.messages)
-        console.log("this.state.messages loooooooool")
+        // console.log("this.state.messages loooooooool")
         // console.log("MODAAAL DATA")
         // console.log(this.state.modal);
         // console.log("MODAAAL DATA")
@@ -558,10 +573,27 @@ class Chat extends React.Component{
                 </View>
             )
         }
-        console.log(this.state.accountOwner);
+        // console.log(this.state.accountOwner);
         return(
             <View style={styles.container}>
                 <Image source={IMAGES.bg} style={styles.bg}/>
+                <NavigationEvents
+                    onWillFocus={async() => {
+                        console.log('heeeeeeeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', this.props)
+                        this.database = firebaseJs.database().ref("chat");
+                        if(Platform.OS === 'android'){
+                            this.requestLocationPermission()
+                        }else{
+                        this._getCurrentLocation()
+                        }
+                        // this.setState({
+                        //     LoginType: await AsyncStorage.getItem('userType'),
+                        // })
+                        
+                        await this.get_messages_onload();
+                        // await this.get_new_messages();
+                    }}
+                />
                 <Header/>
                 {this.state.loading ? (
                     <Spinner

@@ -166,7 +166,7 @@ class Home extends React.Component{
                         let AlertMessage = Store.getState().Config.alert;
                         try{
                             if(this.props.user)
-                                this.props.navigation.navigate('Chat', { productId: this.state.product.id, name:this.state.product.user.name, id:this.state.product.user.id })
+                                this.props.navigation.navigate({ key: (Math.random() * 1000).toString(), routeName:'Chat', params :{ productId: this.state.product.id, name:this.state.product.user.name, id:this.state.product.user.id }})
                             else{
                                 AlertMessage("error", "خطـأ", "يجب تسجيل الدخول اولا");
                             }

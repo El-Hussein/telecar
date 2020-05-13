@@ -16,6 +16,8 @@ import localization from '../../localization/localization';
 import  Icon from 'react-native-vector-icons/FontAwesome5';
 import Header from '../../Components/HeaderNew';
 import Footer from '../../Components/FooterNew';
+import Moment from "moment";  
+import "moment/locale/ar-sa";
 import firebaseJs from "firebase";
 import { FetchAllChat } from "../../Redux/actions/Chat";
 import Spinner from "react-native-spinkit";
@@ -63,7 +65,7 @@ class Chats extends React.Component{
         var sec = a.getSeconds();
         // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
         var time = hour + ':' + min ;
-        return time;
+        return Moment(UNIX_timestamp).format('DD hh:mm A');
     }
 
     _renderChat=({item})=>{
@@ -118,12 +120,20 @@ class Chats extends React.Component{
             // to get a value that is either negative, positive, or zero.
             return new Date(b.timestamp) - new Date(a.timestamp);
         })
-        .filter(function(a) {
-            return !this[a.userId] && (this[a.userId] = true);
-        }, Object.create(null));
+        let newMessages = [];
+        messages.map((m)=>{
+            if(newMessages.findIndex(mm=>mm.productId == m.productId && ((mm.userId == m.userId && mm.merchantId == m.merchantId) || (mm.userId == m.merchantId && mm.merchantId == m.userId))) == -1){
+                console.log('found match', m)
+                newMessages.push(m)
+            }
+        })
+        // .filter(function(a) {
+        //     console.log(a, this, this[a[filterType]] , (this[a[filterType]]))
+        //     return !this[a[filterType]] && (this[a[filterType]] = true);
+        // }, Object.create(null));
 
-        messages.length > 0 &&
-        messages.map(t => {
+        newMessages.length > 0 &&
+        newMessages.map(t => {
             let f = t[Object.keys(t)[Object.keys(t).length - 1]];
             let ob = {
             avatar: "https://randomuser.me/api/portraits/men/75.jpg",
