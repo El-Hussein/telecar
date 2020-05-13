@@ -12,6 +12,7 @@ import {
     TextInput,
     AsyncStorage,
     Linking,
+    PermissionsAndroid,
 } from 'react-native';
 import { IMAGES, height, width, COLORS, baseUrl, moderateScale, verticalScale } from '../../config';
 import localization from '../../localization/localization';
@@ -87,33 +88,91 @@ class Chat extends React.Component{
             long:31.78825,
         }
     }
+     
+     async requestLocationPermission() {
+         try {
+             const granted = await PermissionsAndroid.request(
+             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+             {
+               'title': 'Location Permission',
+               'message': 'MyMapApp needs access to your location'
+             }
+             )
+     
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                this._getCurrentLocation()
+                console.log("Location permission granted")
+            } else {
+                console.log("Location permission denied")
+            }
+        } catch (err) {
+        console.warn(err)
+        }
+     }
+     
+     _getCurrentLocation = () =>{
+         console.log('entered')
+         navigator.geolocation.getCurrentPosition(
+            (position) => {
+                    console.log('entered position')
+                    console.log(position)
+                    this.setState({
+                        lat:position.coords.latitude,
+                        long:position.coords.longitude,
+                    })
+                },
+                (error) => {
+                    console.log('entered error')
+                    console.log(error)
+                    if(error.code == 2){
+                        console.log(error.message)
+                        const AlertMessage = Store.getState().Config.alert;
+                        AlertMessage(
+                            "warn",
+                            "Warn",
+                            "Turn on GPS to access your location"
+                        );
+                    }
+                //  this.setState({ error: error.message })},
+                },
+                { 
+                    // enableHighAccuracy: true, 
+                    timeout: 200000, 
+                    maximumAge: 1000 
+                },
+         );
+    }
 
-    async getMyLocation() {
-        await navigator.geolocation.getCurrentPosition(
-          position => {
-            loc = { longitude: position.coords.longitude, latitude: position.coords.latitude };
-            console.log("Current location is: ")
-            console.log(position)
-            this.setState({
-                lat:position.coords.latitude,
-                long:position.coords.longitude,
-            })
-            console.log("Current location is: ")
-          },
-          error => {
-            //   alert(JSON.stringify(error));
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 20000,
-            maximumAge: 1000
-          }
-        );
-    };
+    // async getMyLocation() {
+    //     await navigator.geolocation.getCurrentPosition(
+    //       position => {
+    //         loc = { longitude: position.coords.longitude, latitude: position.coords.latitude };
+    //         console.log("Current location is: ")
+    //         console.log(position)
+    //         this.setState({
+    //             lat:position.coords.latitude,
+    //             long:position.coords.longitude,
+    //         })
+    //         console.log("Current location is: ")
+    //       },
+    //       error => {
+    //         //   alert(JSON.stringify(error));
+    //       },
+    //       {
+    //         enableHighAccuracy: true,
+    //         timeout: 20000,
+    //         maximumAge: 1000
+    //       }
+    //     );
+    // };
     
     async componentDidMount() {
         this.database = firebaseJs.database().ref("chat");
-        this.getMyLocation();
+        if(Platform.OS === 'android'){
+            this.requestLocationPermission()
+        }else{
+        this._getCurrentLocation()
+        }
         // this.setState({
         //     LoginType: await AsyncStorage.getItem('userType'),
         // })

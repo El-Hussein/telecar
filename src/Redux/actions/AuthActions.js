@@ -27,7 +27,7 @@ import {
   Verifyphoe_SUCCESS,
   Verifyphoe_FAIL
 } from "../types";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, Platform, PermissionsAndroid } from "react-native";
 import axios from "axios";
 
 import firebase from "react-native-firebase";
@@ -36,27 +36,64 @@ import { baseUrl } from "@config";
 import Store from "../index";
 import RNRestart from "react-native-restart";
 
-const getMyLocation = async () => {
+const requestLocationPermission = async ()=> {
+  try {
+      const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        'title': 'Location Permission',
+        'message': 'MyMapApp needs access to your location'
+      }
+      )
+
+     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+         _getCurrentLocation()
+         console.log("Location permission granted")
+     } else {
+         console.log("Location permission denied")
+     }
+ } catch (err) {
+ console.warn(err)
+ }
+}
+
+const _getCurrentLocation = () =>{
+  console.log('entered')
   let loc = {
     latitude: 37.78825,
     longitude: -122.4324
   };
-  await navigator.geolocation.getCurrentPosition(
-    position => {
-      loc = { longitude: position.coords.longitude, latitude: position.coords.latitude };
-      console.log(position)
-    },
-    error => {
-      //   alert(JSON.stringify(error));
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 1000
-    }
+  navigator.geolocation.getCurrentPosition(
+     (position) => {
+         console.log('entered position')
+         console.log(position)
+         loc = { longitude: position.coords.longitude, latitude: position.coords.latitude };
+         },
+         (error) => {
+             console.log('entered error')
+             console.log(error)
+             if(error.code == 2){
+                 console.log(error.message)
+                 const AlertMessage = Store.getState().Config.alert;
+                 AlertMessage(
+                     "warn",
+                     "Warn",
+                     "Turn on GPS to access your location"
+                 );
+             }
+         //  this.setState({ error: error.message })},
+         },
+         { 
+             // enableHighAccuracy: true, 
+             timeout: 200000, 
+             maximumAge: 1000 
+         },
   );
   return loc;
-};
+}
+
+
+
 
 export const ContactUs = (dispatch, email, name, phone, message) => {
   const token = Store.getState().auth.user.token;
@@ -378,7 +415,16 @@ export const VerfiyPhone = async payload => {
 export const RegistClient = async payload => {
   const AlertMessage = Store.getState().Config.alert;
   const token = await GeneratNewToken();
-  const location = await getMyLocation();
+  let location = {};
+  if(Platform.OS === 'android'){
+    requestLocationPermission().then(loc => {
+        location = loc;
+    });
+  }else{
+    _getCurrentLocation().then(loc => {
+        location = loc;
+    });
+  }
   console.log("location")
   console.log(location)
   console.log("location")
@@ -437,7 +483,6 @@ export const LoginClient = async payload => {
   console.log("..............NEW TOKEN..............")
   console.log(token)
   console.log("..............NEW TOKEN..............")
-  const location = await getMyLocation();
   const { email, password, navigation, type, dispatch } = payload;
 
   if (!token) return;

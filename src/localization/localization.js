@@ -183,7 +183,7 @@ export default localization = new LocalizedStrings({
     watingForAminApproval: "wating for admin approval",
     AddProductIntro:
       "In This Page , You Should Show the Sevices You Wan't to Provide",
-    whatsApp: "WhatsApp",
+    whatsApp: "WhatsApp (with country code)",
     longPressmap: "Press Long On This OR Drag ,Drop On Your Position",
 
     /*
@@ -218,6 +218,8 @@ export default localization = new LocalizedStrings({
     pickLocation:'Pick Location',
     Location:"Location",
     passwordmismatch:'Error Password doesn\'t match',
+    noProvider: 'sorry you can not chat with the owner of this service',
+    drham: 'Drham',
   },
   ar: {
     update: "تحديث",
@@ -239,7 +241,7 @@ export default localization = new LocalizedStrings({
     AddPhoto: "إضافة صورة للمنتح",
     ProductOffer: "العرض الخاص بالمنتج",
     ProductPrice: "سعر المنتج",
-    whatsApp: "واتساب",
+    whatsApp: "واتساب (وكود الدولة)",
     Welcom: "مرحباً بك",
     AddProductIntro: "في هذه الصفحة نرجو منك عرض الخدمة التي تقدمها ٫",
     add: "إضافة",
@@ -441,5 +443,7 @@ export default localization = new LocalizedStrings({
     pickLocation:'اختر الموقع',
     Location:"الموقع",
     passwordmismatch:'كلمة المرور غير مطابقة',
+    noProvider: 'اسف, لا يمكنك فتح الدردشة مع صاحب الخدمة.',  
+    drham: 'درهم',
   }
 });

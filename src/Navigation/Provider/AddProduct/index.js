@@ -8,7 +8,8 @@ import {
   Text,
   FlatList,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  PermissionsAndroid
 } from "react-native";
 
 import {
@@ -40,6 +41,7 @@ import ImagePicker from "react-native-image-picker";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Axios from "axios";
+import Store from '../../../Redux'
 import { baseUrl } from "../../../config";
 
 const AnimationTextError = ({ error }) => (
@@ -104,26 +106,80 @@ const RenderInput = ({
     </View>
   );
 };
-const getMyLocation = async () => {
+
+
+const requestLocationPermission = async () => {
+   try {
+       const granted = await PermissionsAndroid.request(
+       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+       {
+         'title': 'Location Permission',
+         'message': 'MyMapApp needs access to your location'
+       }
+       )
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          this._getCurrentLocation()
+          console.log("Location permission granted")
+      } else {
+          console.log("Location permission denied")
+      }
+  } catch (err) {
+  console.warn(err)
+  }
+}
+
+const _getCurrentLocation = () =>{
   let loc = {
     latitude: 37.78825,
     longitude: -122.4324
   };
-  await navigator.geolocation.getCurrentPosition(
-    position => {
-      loc = { longitude: position.longitude, latitude: position.latitude };
-    },
-    error => {
-      //   alert(JSON.stringify(error));
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 1000
-    }
-  );
-  return loc;
-};
+   console.log('entered')
+   navigator.geolocation.getCurrentPosition(
+      (position) => {
+          console.log('entered position')
+          console.log(position)
+          loc = { longitude: position.longitude, latitude: position.latitude };
+          },
+          (error) => {
+              console.log('entered error')
+              console.log(error)
+              if(error.code == 2){
+                  console.log(error.message)
+                  const AlertMessage = Store.getState().Config.alert;
+                  AlertMessage(
+                      "warn",
+                      "Warn",
+                      "Turn on GPS to access your location"
+                  );
+              }
+          //  this.setState({ error: error.message })},
+          },
+          { 
+              // enableHighAccuracy: true, 
+              timeout: 200000, 
+              maximumAge: 1000 
+          },
+   );
+   return loc;
+}
+
+// const getMyLocation = async () => {
+//   await navigator.geolocation.getCurrentPosition(
+//     position => {
+      
+//     },
+//     error => {
+//       //   alert(JSON.stringify(error));
+//     },
+//     {
+//       enableHighAccuracy: true,
+//       timeout: 20000,
+//       maximumAge: 1000
+//     }
+//   );
+//   return loc;
+// };
 const MyHandels = props => {
   const dataCity = [...props.cities.map(e => e.name), "إلغاء"];
   const [newOrder, SetOrder] = useState({
@@ -145,9 +201,15 @@ const MyHandels = props => {
   const [firstLoad, setFirstLoad] = useState(true);
   if (firstLoad) {
     setFirstLoad(false);
-    getMyLocation().then(loc => {
-      SetOrder({ ...newOrder, ...loc });
-    });
+    if(Platform.OS === 'android'){
+        requestLocationPermission().then(loc => {
+          SetOrder({ ...newOrder, ...loc });
+        });
+    }else{
+        _getCurrentLocation().then(loc => {
+          SetOrder({ ...newOrder, ...loc });
+        });
+    }
   }
   return (
     <View style={{ flex: 1 }}>

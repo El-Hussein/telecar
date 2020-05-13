@@ -7,7 +7,9 @@ import {
     I18nManager,
     ScrollView,
     TouchableOpacity,
-    Modal
+    Modal,
+    PermissionsAndroid,
+    Platform
 } from 'react-native';
 import { COLORS, IMAGES, height, width, verticalScale } from '../../config';
 import { RFValue } from "react-native-responsive-fontsize";
@@ -22,6 +24,8 @@ import { UpdateProfile } from "../../Redux/actions/AuthActions";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Spinner from "react-native-spinkit";
+import Store from "../../Redux";
+
 import ImagePicker from 'react-native-image-picker';
 class Profile extends React.Component{
     state={
@@ -62,31 +66,66 @@ class Profile extends React.Component{
     }
 
     componentDidMount(){
-        this.getMyLocation();
+        if(Platform.OS === 'android'){
+           this.requestLocationPermission()
+        }else{
+           this._getCurrentLocation()
+        }
+     }
+     
+     async requestLocationPermission() {
+         try {
+             const granted = await PermissionsAndroid.request(
+             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+             {
+               'title': 'Location Permission',
+               'message': 'MyMapApp needs access to your location'
+             }
+             )
+     
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                this._getCurrentLocation()
+                console.log("Location permission granted")
+            } else {
+                console.log("Location permission denied")
+            }
+        } catch (err) {
+        console.warn(err)
+        }
+     }
+     
+     _getCurrentLocation = () =>{
+         console.log('entered')
+         navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log('entered position')
+                console.log(position)
+                    this.setState({
+                        lat:position.coords.latitude,
+                        long:position.coords.longitude,
+                    })
+                },
+                (error) => {
+                    console.log('entered error')
+                    console.log(error)
+                    if(error.code == 2){
+                        console.log(error.message)
+                        const AlertMessage = Store.getState().Config.alert;
+                        AlertMessage(
+                            "warn",
+                            "Warn",
+                            "Turn on GPS to access your location"
+                        );
+                    }
+                //  this.setState({ error: error.message })},
+                },
+                { 
+                    // enableHighAccuracy: true, 
+                    timeout: 200000, 
+                    maximumAge: 1000 
+                },
+         );
     }
-
-    async getMyLocation() {
-        await navigator.geolocation.getCurrentPosition(
-          position => {
-            loc = { longitude: position.coords.longitude, latitude: position.coords.latitude };
-            // console.log("Current location is: ")
-            // console.log(position)
-            this.setState({
-                lat:position.coords.latitude,
-                long:position.coords.longitude,
-            })
-            // console.log("Current location is: ")
-          },
-          error => {
-            //   alert(JSON.stringify(error));
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 20000,
-            maximumAge: 1000
-          }
-        );
-    };
     
     submitLogin(){
         console.log("SUMITTED???????????????")

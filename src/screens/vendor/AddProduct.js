@@ -9,7 +9,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     I18nManager,
-    TouchableOpacity
+    TouchableOpacity,
+    PermissionsAndroid
 } from 'react-native';
 import localization from '../../localization/localization';
 import Header from '../../Components/HeaderNew';
@@ -45,33 +46,76 @@ class AddProduct extends React.Component{
         };
     }
 
-    getMyLocation = async () => {
+    _getCurrentLocation = async () =>{
+        console.log('entered')
         let loc = {
-          latitude: 37.78825,
-          longitude: -122.4324
-        };
-        await navigator.geolocation.getCurrentPosition(
-          position => {
-            loc = { longitude: position.longitude, latitude: position.latitude };
-          },
-          error => {
-            //   alert(JSON.stringify(error));
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 20000,
-            maximumAge: 1000
-          }
+            latitude: 37.78825,
+            longitude: -122.4324
+          };
+        navigator.geolocation.getCurrentPosition(
+           (position) => {
+               console.log('entered position')
+               console.log(position)
+               loc = { longitude: position.longitude, latitude: position.latitude };
+               },
+               (error) => {
+                   console.log('entered error')
+                   console.log(error)
+                   if(error.code == 2){
+                       console.log(error.message)
+                       const AlertMessage = Store.getState().Config.alert;
+                       AlertMessage(
+                           "warn",
+                           "Warn",
+                           "Turn on GPS to access your location"
+                       );
+                   }
+               //  this.setState({ error: error.message })},
+               },
+               { 
+                   // enableHighAccuracy: true, 
+                   timeout: 200000, 
+                   maximumAge: 1000 
+               },
         );
         return loc;
-    };
+   }
+
+   async requestLocationPermission() {
+    try {
+        const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          'title': 'Location Permission',
+          'message': 'MyMapApp needs access to your location'
+        }
+        )
+
+       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+           this._getCurrentLocation()
+           console.log("Location permission granted")
+       } else {
+           console.log("Location permission denied")
+       }
+   } catch (err) {
+   console.warn(err)
+   }
+}
 
     componentWillMount(){
-        this.getMyLocation().then(loc => {
-            this.setState({
-                ...loc
-            })
-        });
+        if(Platform.OS === 'android'){
+            this.requestLocationPermission().then(loc => {
+                this.setState({
+                    ...loc
+                })
+            });
+         }else{
+            this._getCurrentLocation().then(loc => {
+                this.setState({
+                    ...loc
+                })
+            });
+         }
     }
 
     reset(){
@@ -377,7 +421,7 @@ const styles = StyleSheet.create({
         height:width*0.08,
         resizeMode:'contain',
         // backgroundColor:'red',
-        transform:[{ rotate:!I18nManager.isRTL&&!rtl?'180deg':'0deg'}],
+        transform:[{ rotate:!I18nManager.isRTL&&!rtl?'0deg':'180deg'}],
     },
     loginButton:{
         flexDirection:!I18nManager.isRTL&&rtl?'row':'row-reverse',

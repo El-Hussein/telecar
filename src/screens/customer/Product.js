@@ -49,7 +49,7 @@ const openMapsApp = (lat, lng, label) => {
           Linking.openURL(url);
           return true;
         } else {
-          const AlertMessage = Store.getState().Config.alert;
+          let AlertMessage = Store.getState().Config.alert;
           AlertMessage("error", "خطـأ", localization.someThingWentWrong);
     
           console.log("Don't know how to open URI: " + url);
@@ -60,16 +60,20 @@ const openMapsApp = (lat, lng, label) => {
 
 const openWhatsApp = url => {
     return Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url);
-        return true;
-      } else {
-        const AlertMessage = Store.getState().Config.alert;
-        AlertMessage("error", "خطـأ", localization.someThingWentWrong);
-  
-        console.log("Don't know how to open URI: " + url);
-        return false;
-      }
+        let AlertMessage = Store.getState().Config.alert;
+        try{
+            if (supported) {
+                Linking.openURL(url);
+                return true;
+            } else {
+                AlertMessage("error", "خطـأ", localization.someThingWentWrong);
+        
+                console.log("Don't know how to open URI: " + url);
+                return false;
+            }
+        }catch(e){
+            AlertMessage("error", "خطـأ", localization.someThingWentWrong);
+        }
     });
 };
 
@@ -142,7 +146,10 @@ class Home extends React.Component{
                 <Header title={localization.home}/>
                 <Galary images={this.state.sliderImages} style={{position:'relative', top:height*-0.04, zIndex:5, elevation:5}}/>
                 <View style={{width:width*0.96, backgroundColor:'rgba(255,255,255,0.6)', marginHorizontal:width*0.02}}>
-                    <Text style={{color:COLORS.main, paddingHorizontal:width*0.02, textAlign:'left', fontSize:width*0.04, fontWeight:'bold'}}> {this.state.product.name} </Text>
+                    <View style={{justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
+                        <Text style={{color:COLORS.main, paddingHorizontal:width*0.02, textAlign:'left', fontSize:width*0.04, fontWeight:'bold'}}> {this.state.product.name} </Text>
+                        <Text style={{color:COLORS.main, paddingHorizontal:width*0.02, textAlign:'left', fontSize:width*0.04, fontWeight:'bold'}}> {this.state.product.price + ' ' + localization.drham} </Text>
+                    </View>
                     <Text style={{color:COLORS.gray, paddingHorizontal:width*0.02, width:width*0.96, textAlign:'left', fontSize:width*0.03, fontWeight:'bold'}}> {this.state.product.created_at} </Text>
                     <View style={{width:'100%', height:height*0.0007, backgroundColor:COLORS.gray}}/>
                     <Text style={{color:COLORS.gray, paddingHorizontal:width*0.02, width:width*0.96, textAlign:'left', minHeight:height*0.1, paddingVertical:width*0.02, fontSize:width*0.035, fontWeight:'bold'}}> {this.state.product.details} </Text>
@@ -156,11 +163,15 @@ class Home extends React.Component{
                         <Image source={IMAGES.phone} style={{width:width*0.1, height:width*0.1, resizeMode:'contain'}}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{
-                        if(this.props.user)
-                            this.props.navigation.navigate('Chat', { productId: this.state.product.id, name:this.state.product.user.name, id:this.state.product.user.id })
-                        else{
-                            const AlertMessage = Store.getState().Config.alert;
-                            AlertMessage("error", "خطـأ", "يجب تسجيل الدخول اولا");
+                        let AlertMessage = Store.getState().Config.alert;
+                        try{
+                            if(this.props.user)
+                                this.props.navigation.navigate('Chat', { productId: this.state.product.id, name:this.state.product.user.name, id:this.state.product.user.id })
+                            else{
+                                AlertMessage("error", "خطـأ", "يجب تسجيل الدخول اولا");
+                            }
+                        }catch(e){
+                            AlertMessage("warn", "", localization.noProvider);
                         }
                     
                     }} style={{width:width*0.245, justifyContent:'center', alignItems:'center', borderLeftWidth:width*0.001, borderLeftColor:COLORS.gray}}>
