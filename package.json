@@ -18,7 +18,7 @@
     "firebase": "^7.4.0",
     "formik": "^1.5.7",
     "install": "^0.12.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "native-base": "^2.12.1",
     "npm": "^6.9.0",
     "paytabs_api": "^1.0.0",
